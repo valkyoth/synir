@@ -1,0 +1,74 @@
+name: Rust CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: rustup show
+      - run: scripts/checks.sh
+      - run: scripts/install-ci-tools.sh
+      - run: cargo deny check
+      - run: cargo audit --deny warnings
+
+  host:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: rustup show
+      - run: cargo test --locked --offline --workspace --no-default-features
+      - run: cargo test --locked --offline --workspace --all-features
+      - run: cargo clippy --locked --offline --workspace --all-targets --all-features -- -D warnings
+
+  compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: ["1.90.0", "1.91.0", "1.91.1", "1.92.0", "1.93.0", "1.93.1", "1.94.0", "1.94.1", "1.95.0", "1.96.0", "1.96.1", "1.97.0", "1.97.1", "1.98.0", "1.98.1"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install ${{ matrix.rust }} --profile minimal
+      - run: cargo +${{ matrix.rust }} check --locked --offline --workspace --no-default-features
+      - run: cargo +${{ matrix.rust }} check --locked --offline --workspace --all-features
+
+  portable:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: rustup show
+      - run: rustup target add x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu x86_64-pc-windows-msvc aarch64-apple-darwin x86_64-apple-darwin x86_64-unknown-freebsd aarch64-linux-android aarch64-apple-ios thumbv7em-none-eabihf riscv32imac-unknown-none-elf
+      - run: scripts/check-platforms.sh

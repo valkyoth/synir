@@ -1,0 +1,26 @@
+[package]
+build = false
+name = "synir"
+description = "Portable facade for the Synir syntax toolkit (foundation only)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
+include = ["src/**", "README.md", "LICENSE-MIT", "LICENSE-APACHE", "Cargo.toml"]
+
+[features]
+default = []
+alloc = ["synir-core/alloc"]
+proc-macro = ["dep:synir-host"]
+quote = ["dep:synir-macros", "proc-macro"]
+
+[dependencies]
+synir-core.workspace = true
+synir-host = { workspace = true, optional = true }
+synir-macros = { workspace = true, optional = true }
+
+[lints]
+workspace = true

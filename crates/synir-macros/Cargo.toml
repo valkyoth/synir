@@ -1,0 +1,22 @@
+[package]
+build = false
+name = "synir-macros"
+description = "Optional procedural macro helpers for Synir (foundation only)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
+include = ["src/**", "README.md", "LICENSE-MIT", "LICENSE-APACHE", "Cargo.toml"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+synir-core.workspace = true
+synir-host.workspace = true
+
+[lints]
+workspace = true
