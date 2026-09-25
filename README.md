@@ -59,14 +59,7 @@ separate from the source grammar and Unicode versions Synir will understand.
 | Rust compiler | Required verification |
 | --- | --- |
 | 1.90.0 | MSRV, minimal and all-feature workspace checks |
-| 1.91.0, 1.91.1 | Minimal and all-feature workspace checks |
-| 1.92.0 | Minimal and all-feature workspace checks |
-| 1.93.0, 1.93.1 | Minimal and all-feature workspace checks |
-| 1.94.0, 1.94.1 | Minimal and all-feature workspace checks |
-| 1.95.0 | Minimal and all-feature workspace checks |
-| 1.96.0, 1.96.1 | Minimal and all-feature workspace checks |
-| 1.97.0, 1.97.1 | Minimal and all-feature workspace checks |
-| 1.98.0 | Minimal and all-feature workspace checks |
+| 1.91.0–1.98.0 | Minimal and all-feature workspace checks |
 | **1.98.1** | **Full lint, tests, docs, policy, package, platform and security checks** |
 
 The upper version is a tested baseline, not a Cargo upper bound. Weekly review
