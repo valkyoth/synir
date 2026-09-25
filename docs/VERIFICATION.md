@@ -5,8 +5,11 @@
 `scripts/checks.sh` runs format, policy, strict Clippy, minimal/all-feature tests,
 feature wiring checks, rustdoc and the self-contained core package verification.
 `scripts/check-rust-version-matrix.sh` checks all released compilers from 1.90.0
-through 1.98.1. `scripts/check-platforms.sh` checks portable profiles on all named
-targets, including bare metal without std. None silently skips missing tools.
+through 1.98.1 and now executes workspace tests on every listed compiler. At
+foundation stage these exercise tooling only; real native macro fixtures are
+required as soon as native APIs are admitted. `scripts/check-platforms.sh` checks
+portable profiles on all named targets, including bare metal without std. None
+silently skips missing tools.
 
 `cargo deny check` and `cargo audit --deny warnings` consume current advisory data.
 `cargo xtask freshness` checks official Rust distribution metadata and stable
@@ -14,10 +17,16 @@ Git tags for installed-tool pins; it reports drift or unavailable sources and
 never installs updates automatically. Dependency graph enforcement covers
 normal/build/dev edges, all features and all targets, not just the default graph.
 
+The local gate also runs Brynja-derived release-readiness tests in disposable
+Git repositories, including signed tags, stale/dirty reports and pending retests.
+It does not demand a real report for ordinary implementation work.
+
 The Rust xtask checks first-party package paths, no registry/git lock entries,
 source size, mandatory unsafe/no_std markers, shared README headers and local
-Markdown file links, plus complete numbered roadmap fields and pentest exits. These are repository guardrails, not proofs of semantic
-correctness or a malicious maintainer's inability to modify the guards.
+Markdown file links, plus complete numbered roadmap fields, pentest exits and
+all 26 requirement rows referencing real milestone owners. These are repository
+guardrails, not proofs of semantic correctness or a malicious maintainer's
+inability to modify the guards.
 
 ## Evidence grows with implemented behavior
 
@@ -62,3 +71,37 @@ separate evidence classes. Publish compiler/profile/corpus/command/result,
 resource thresholds and limitations. Benchmarks record cold/warm builds, wall
 and CPU time, host memory, native import, emitted tokens and profile features.
 No numeric coverage or speedup is currently established.
+
+## Early gates and later campaigns
+
+The early assurance milestones own the runner, deterministic generation,
+independent external-oracle protocol and scheduled execution separately. Their
+future commands are `scripts/check-assurance.sh quick|extended` and
+`scripts/check-native-fixtures.sh --toolchain VERSION`; these commands are
+planned, not currently available. Foundation primitives start with in-crate tests;
+the runners become mandatory before native/parser capabilities are admitted.
+Quick replay runs per change; extended
+runs are scheduled and repeated before releases. Register each public parser,
+decoder, schema, sink, recovery and edit entry point with positive, negative,
+exact-limit, one-over-limit and applicable phase-exhaustion fixtures.
+
+Scope manifests record numeric case/work/storage/output/time limits, corpus and
+oracle revisions, coverage exclusions, reproducible seed and expected outcome.
+Fail on empty required corpora, missing compiler/oracle, untriaged disagreement,
+regression over the accepted resource bound or incomplete required evidence.
+Distinguish seeded generators from coverage-guided external fuzzing. Counters
+must charge comparisons, retries, error handling, Unicode ordering and emission,
+including worst-case rather than only average growth. Later campaigns expand
+these gates; they do not introduce the first adversarial tests.
+
+The native runner executes real Synir proc-macro consumers on every advertised
+compiler, with selected editions/profiles, stable diagnostic markers/locations,
+renamed dependencies, macro_rules/None groups and expansion-behavior assertions.
+It must receive the intended compiler explicitly and fail on missing fixtures;
+plain workspace compilation is not a substitute. Keep target compilation and
+host execution evidence distinct. Source/native parity includes doc-comment
+lowering, punctuation and normalized identifiers.
+
+Benchmark admitted workflows against both ordinary and selective upstream use,
+including native import and manual/helper profile cost. Record measured baselines
+and review regression thresholds per workload; claim no universal speedup.

@@ -61,6 +61,8 @@ jobs:
       - run: rustup toolchain install ${{ matrix.rust }} --profile minimal
       - run: cargo +${{ matrix.rust }} check --locked --offline --workspace --no-default-features
       - run: cargo +${{ matrix.rust }} check --locked --offline --workspace --all-features
+      - run: cargo +${{ matrix.rust }} test --locked --offline --workspace --no-default-features
+      - run: cargo +${{ matrix.rust }} test --locked --offline --workspace --all-features
 
   portable:
     runs-on: ubuntu-latest

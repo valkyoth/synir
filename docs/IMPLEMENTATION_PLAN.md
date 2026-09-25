@@ -43,6 +43,8 @@ libraries, test fixtures and maintainer workspaces all retain the no-third-party
 rule. External executables can supply compiler/fuzz/differential evidence;
 do not introduce Syn, libFuzzer, trybuild or a property library as dev dependencies.
 Use deterministic first-party generators and `std::process` fixture runners.
+The release-report scripts and disposable Git fixtures follow Brynja directly;
+they use Bash/Git/SSH tooling and add no Cargo dependencies.
 
 ## Profiles and boundaries
 
@@ -88,13 +90,23 @@ existing strict operation recover silently or change its backend concrete type.
 
 ## Implementation sequence
 
+Pin the grammar/edition/source manifest before declaration recognition. Maintain
+the roadmap requirement matrix so every idea capability has an exact owner and
+a named observable acceptance test; planned evidence never counts as implemented.
+
 Deliver foundation and deterministic adversarial fixtures first, then native
 token import and grammar-aware declaration boundaries. Literal/schema behavior
 precedes generated behavior controlled by attributes. Manual emission and a
 real Describe acceptance project precede quotation. Source/Unicode, expanded
 declarations, expressions/patterns/items, traversal and source edits follow in
-separate passes. Full capability acceptance precedes 1.0; the focused macro
+separate passes. Source-text emission has its own lexical-separation and failed-
+sink contract; bounded recovery belongs only to explicit source inspection and
+cannot feed validated emission without revalidation. Full capability acceptance precedes 1.0; the focused macro
 profile is usable in pre-1.0 milestones without waiting for full-source tooling.
+
+Each pass admits at most three tightly coupled new behaviors; split broader
+grammar and Unicode work before implementation. The single roadmap contains the
+original-to-current version map after the audit expansion to 137 passes.
 
 Each pass starts with a scope manifest naming APIs, inputs/outputs/errors,
 exclusions, numeric budgets, crate ownership and test command. Consult current
@@ -108,6 +120,8 @@ Code, tests, docs, examples and release notes agree on scope. Run local checks,
 compiler and applicable platform/feature matrices; record corpus and source
 revisions. Gather parser-specific hostile-input, differential and resource
 measurements from the first algorithmic releases onward. Stop at an exact
-candidate for pentest; remediate and repeat affected verification. Only linked
+candidate for pentest; remediate and repeat affected verification. Commit the
+permanent report with the candidate and update it with subsequent CI fixes,
+following Brynja's simple report gate. Only linked
 evidence can promote a capability from planned to implemented or independently
 reviewed. Publication and tagging follow [the runbook](RELEASE_RUNBOOK.md).

@@ -14,8 +14,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - run: rustup show
       - run: scripts/checks.sh
       - run: cargo xtask freshness
-      # Pentest, exact-candidate evidence and authorization follow the runbook.
+      - name: Require current committed passing pentest report
+        run: scripts/release/validate-current-pentest.sh --required
+      # The user confirms green GitHub and authorizes tagging after these checks.
       # This workflow does not tag or publish packages.

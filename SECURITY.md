@@ -33,7 +33,9 @@ publish affected scope and migration impact without disclosing an unfixed exploi
 - Strict errors, complete-consumption APIs and one monotonic invocation budget.
 - Bounded diagnostic output with redaction; transactional high-level emission.
 - Pinned tools and action commits; weekly freshness and pre-release review.
-- Every version requires an exact candidate pentest, remediation and retest.
+- Every release version requires a candidate pentest, remediation and retest.
+  Commit its report with the final candidate and update it with later CI fixes;
+  the Brynja-style release gate requires PASS/PASS with zero open findings.
 - Local tests, CI, CodeQL and a maintainer review are distinct evidence sources.
 
 Run `scripts/checks.sh`, compiler/platform matrices, `cargo deny check`,

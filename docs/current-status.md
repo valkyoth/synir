@@ -7,6 +7,7 @@ Candidate: 0.1.0, unpublished. Stage: workspace foundation.
 | Four first-party crates, safe-code policy | Scaffold implemented | Cargo manifests and local checks |
 | no_std/no-allocator core boundary | Compile-verifiable scaffold | Platform gate; no syntax algorithms |
 | Repository policy/freshness tools | Implemented | xtask tests and checks |
+| Committed-report release gate | Implemented; real report still missing | Brynja-derived report and signed-tag fixture tests |
 | Native compiler adapter | Planned | [Native tokens and portable views](RELEASE_PLAN.md#native-tokens-and-portable-views) |
 | Derive parsing and strict attributes | Planned | [Declarations](RELEASE_PLAN.md#declaration-recognition-and-generic-projections) and [schemas](RELEASE_PLAN.md#literal-decoding-and-typed-attributes) |
 | Manual emission and quotation | Planned | [Emission](RELEASE_PLAN.md#fallible-emission-and-usable-macro-profile) and [quotation](RELEASE_PLAN.md#quotation-and-generated-schemas) |

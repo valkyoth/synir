@@ -2,6 +2,7 @@
 set -eu
 cargo fmt --all --check
 cargo xtask policy
+scripts/release/test-release-readiness.sh
 cargo clippy --locked --offline --workspace --all-targets --all-features -- -D warnings
 cargo test --locked --offline --workspace --no-default-features
 cargo test --locked --offline --workspace --all-features

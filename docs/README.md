@@ -8,3 +8,4 @@ Start with the [implementation plan](IMPLEMENTATION_PLAN.md),
 - [Platforms](PLATFORMS.md), [current status](current-status.md) and [setup evidence](verification/setup.md).
 - [Tool/source review](maintenance-review.md) and [reference provenance](reference-provenance.md).
 - [Release runbook](RELEASE_RUNBOOK.md) and [release notes](../release-notes/README.md).
+- [Plan audit follow-up](verification/plan-audit-follow-up.md) — six findings and verification results.

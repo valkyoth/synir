@@ -1,52 +1,75 @@
 # Release runbook
 
-## Prepare a reviewable candidate
+## Prepare the candidate
 
-1. Select one milestone from [the release plan](RELEASE_PLAN.md); record exact
-   APIs, inputs, outputs, errors, excluded work, resource bounds and test commands.
-2. Recheck current Rust/tools, grammar sources and all first-party versions.
-   Run `cargo xtask freshness`; unavailable sources block freshness evidence.
-3. Implement and test the scope; update status, public docs, changelog and
-   `release-notes/vX.Y.Z.md`. Run local, compiler, platform and security gates.
-4. Verify all package archives in dependency order in an isolated local registry
-   or staging environment before publication; never publish to test packaging.
-   The foundation local gate verifies core; sibling registry resolution and
-   complete family publication remain later release work.
-5. Record exact implementation commit, lockfile, compiler, target/profile matrix,
-   grammar/Unicode revisions (or N/A), tests, corpus/fuzz summaries, benchmarks
-   if claimed, graph/SBOM and archive checksums. External signing tools own
-   signatures; Synir must not implement signing cryptography.
+1. Select one [roadmap milestone](RELEASE_PLAN.md); record exact APIs, errors,
+   exclusions, resource bounds, corpus entries and test commands in its scope
+   manifest. Update the requirement coverage rows with actual evidence links.
+2. Run `cargo xtask freshness`, local checks and applicable compiler/platform
+   and assurance gates. Unavailable evidence does not count as a pass.
+3. Update status, README, changelog and `release-notes/vX.Y.Z.md`.
+4. Before publication, verify all package archives in dependency order in an
+   isolated staging environment. Record graph/SBOM, compiler/profile/corpus and
+   grammar/Unicode revisions, checksums and relevant resource/performance evidence.
+   The foundation local gate verifies core; full-family archive rehearsal is
+   still planned and must complete before the first family publication.
 
-## Pentest stop for every version
+## One report committed with the candidate
 
-Freeze the implementation candidate and identify its full commit hash. Pentest
-scope includes changed code, negative/budget tests, CI/release controls and any
-new trust boundary. The foundation pentest is a tooling/design review.
-The report template is [security/pentest/TEMPLATE.md](../security/pentest/TEMPLATE.md).
-Do not fabricate tester identity, results, PASS status or independence.
+Follow Brynja's reporting workflow. Use one permanent report at
+`security/pentest/vX.Y.Z[-rc.N].md`, starting from the
+[template](../security/pentest/TEMPLATE.md). Record Version, Status, Open-Findings,
+Retest, Date, Tester and Scope, followed by methods, findings, remediation,
+retest results and limitations. No separate commit-hash field is required.
 
-Resolve findings and rerun affected checks. A changed implementation invalidates
-its old passing report: repeat the relevant pentest on the new exact candidate.
-Record unresolved findings and dispositions. Release-blocking issues cannot be
-waived by a passing local test suite. Preserve the final report in
-`security/pentest/vX.Y.Z.md` with candidate hash, reviewer/date/scope, findings,
-retest evidence and result. An evidence-only commit can follow the candidate;
-verify that its diff changes only the report and release evidence, then bind the
-signed tag to that commit and name the reviewed parent explicitly.
+Perform the candidate pentest, fix findings and retest. Commit the final report
+with the candidate. If CI requires a subsequent change, review/retest it and
+commit that change with the corresponding report update, then rerun CI. Do not
+invent a passing assessment or describe automated checks as independent review.
+A report is evidence from its author; the gate validates its state and Git
+relationship, not the quality or truth of that assessment.
 
-## Admit and publish
+For a non-release status check:
 
-Confirm GitHub CI and CodeQL Default setup are green for the candidate. Confirm
-private reporting, required checks and branch protection in repository settings.
-Review the exact report/diff and release artifacts. The current metadata workflow
-is a validation aid; it is not an automated publication or pentest approval gate.
+```sh
+scripts/release/validate-current-pentest.sh
+```
 
-Only after maintainer authorization, create/verify a signed tag, push it, and
-publish reviewed packages in order: core, host, macros, facade. Keep tokens out
-of CI jobs that process untrusted pull requests. Publish release notes and
-checksums with the tag. Recheck registry contents and downstream installation.
-Nothing in repository initialization authorizes tagging or publishing now.
+Missing evidence leaves release blocked. A committed report may say
+`Status: RETEST REQUIRED`, `Open-Findings: 0`, `Retest: PENDING` while awaiting
+retest; this never passes the required release gate. Keep ordinary implementation
+CI free of report freshness requirements; it runs the gate's regression tests.
 
-1.0 additionally requires the full capability acceptance matrix, native platform
-claims backed by execution, independent parser/emitter review, remediation,
-API freeze and candidate retest. No milestone is complete because time ran out.
+## Release and tag check
+
+After the final report is committed, require:
+
+```sh
+scripts/release/validate-current-pentest.sh --required
+```
+
+The gate selects the current Cargo version and requires PASS/PASS with zero open
+findings, a regular committed report, a clean checkout, a current candidate/report
+update and an absent release tag. The direct equivalent for a named candidate is
+`scripts/release/validate-release-readiness.sh vX.Y.Z`.
+
+The release workflow fetches full history and runs this required check. GitHub
+CodeQL uses Default setup only. The user confirms that CI and CodeQL are green
+and authorizes tagging. Then create a signed annotated tag with subject
+`Synir vX.Y.Z` (lowercase `synir` is also accepted). Verify before publication:
+
+```sh
+SYNIR_RELEASE_PUBLISH_TAG=vX.Y.Z scripts/release/validate-release-readiness.sh vX.Y.Z
+```
+
+This context checks the signature, subject and direct HEAD commit target of the
+existing tag. The gate itself never creates/pushes tags or publishes packages.
+Publish reviewed packages in order: core, host, macros, facade; retain notes,
+checksums and provenance, and verify installed registry contents. Keep publishing
+credentials out of untrusted pull-request jobs. Local development commits remain
+allowed without a pentest; release tags and publication require the passing gate.
+
+Synir keeps pentests for every release version, including patches and RCs. The
+adaptation does not add Brynja's checkpoint cadence or exceptional deferral flow.
+1.0 also requires complete capability evidence, independent review/remediation,
+platform runtime acceptance and the admitted production candidate.

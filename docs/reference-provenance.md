@@ -24,3 +24,10 @@ Synir's package metadata and contribution policy consistently state MIT OR
 Apache-2.0. Upstream template notices are retained where applicable.
 The idea's A: source anchors refer to an earlier attachment not present here;
 its historical review statements are not new Synir verification evidence.
+
+The plan-audit follow-up also adapts Brynja's validate-release-readiness.sh,
+validate-current-pentest.sh and disposable Git regression tests. Report fields,
+PASS/pending handling, clean candidate checks, parent/report freshness and signed
+tag verification follow that implementation. Synir reads its version from Cargo;
+Brynja-only checkpoint/baseline and exceptional deferral logic is omitted. No
+new report commit-hash field, independent approval service or extra report is added.
